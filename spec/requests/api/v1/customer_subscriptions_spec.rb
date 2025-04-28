@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Customer Subscriptions API", type: :request do
   describe "Patch Customer Subscriptions Endpoint" do
     let(:sub) { create(:customer_subscription, status: "active") }
-    let(:params) { {active: false} }
+    let(:params) { {active: "false"} }
 
     context "with valid request" do
       it "can cancel a subscription" do
@@ -14,11 +14,11 @@ RSpec.describe "Customer Subscriptions API", type: :request do
 
         expect(json[:data][:id]).to be_a String
         expect(json[:data][:type]).to eq("customer_subscription")
-        expect(json[:data][:attributes][:status]).to eq("active")
+        expect(json[:data][:attributes][:status]).to eq("inactive")
       end
 
       it "can activate a subscription" do
-        params[:active] = true
+        params[:active] = "true"
 
         patch api_v1_customer_subscriptions_path(sub.id), params: params, as: :json
 
@@ -27,7 +27,7 @@ RSpec.describe "Customer Subscriptions API", type: :request do
 
         expect(json[:data][:id]).to be_a String
         expect(json[:data][:type]).to eq("customer_subscription")
-        expect(json[:data][:attributes][:status]).to eq("inactive")
+        expect(json[:data][:attributes][:status]).to eq("active")
       end
     end
 
@@ -38,7 +38,7 @@ RSpec.describe "Customer Subscriptions API", type: :request do
         json = JSON.parse(response.body, symbolize_names: true)
 
         expect(response).to have_http_status(:not_found)
-        expect(json[:message]).to eq("Couldn't find User with 'id'=-1")
+        expect(json[:message]).to eq("Couldn't find CustomerSubscription with 'id'=-1")
         expect(json[:status]).to eq(404)
       end
 
