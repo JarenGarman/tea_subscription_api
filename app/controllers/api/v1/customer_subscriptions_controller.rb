@@ -10,7 +10,7 @@ class Api::V1::CustomerSubscriptionsController < ApplicationController
       render json: ErrorSerializer.format_error(ErrorMessage.new("Value of active must be 'true' or 'false'", 422)), status: :unprocessable_entity
       return
     end
-    render json: CustomerSubscriptionSerializer.new(customer_sub), status: :ok
+    render json: CustomerSubscriptionSerializer.new(customer_sub, fields: {customer_subscription: [:status]}), status: :ok
   end
 
   private

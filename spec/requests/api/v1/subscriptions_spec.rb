@@ -70,4 +70,67 @@ RSpec.describe "Subscriptions API", type: :request do
       end
     end
   end
+
+  describe "Get Subscription Endpoint" do
+    let(:sub) { Subscription.all.sample }
+
+    context "with valid request" do
+      it "returns all subscription with expected fields and relationships" do
+        get api_v1_subscription_path(sub.id)
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(json[:data][:id]).to be_a String
+        expect(json[:data][:type]).to eq("subscription")
+        expect(json[:data][:attributes][:title]).to be_a String
+        expect(json[:data][:attributes][:price]).to be_a Float
+        expect(json[:data][:attributes][:image_url]).to be_a String
+
+        teas = json[:data][:relationships][:teas][:data]
+        expect(teas.size).to eq(sub.teas.size)
+        teas.each do |tea|
+          expect(tea[:id]).to be_a String
+          expect(tea[:type]).to eq("tea")
+        end
+
+        expect(json[:included].size).to eq(sub.teas.size)
+        json[:included].each do |tea|
+          expect(tea[:id]).to be_a String
+          expect(tea[:type]).to eq("tea")
+          expect(tea[:attributes][:title]).to be_a String
+          expect(tea[:attributes][:description]).to be_a String
+          expect(tea[:attributes][:brew_time]).to be_an Integer
+          expect(tea[:attributes][:image_url]).to be_a String
+        end
+
+        customer_subs = json[:data][:attributes][:customer_subscriptions][:data]
+        expect(customer_subs.size).to eq(sub.customer_subscriptions.size)
+        customer_subs.each do |customer_sub|
+          expect(customer_sub[:id]).to be_a String
+          expect(customer_sub[:type]).to eq("customer_subscription")
+          expect(customer_sub[:attributes][:status]).to eq("active").or eq("inactive")
+          customer = customer_sub[:attributes][:customer][:data]
+          expect(customer[:id]).to be_a String
+          expect(customer[:type]).to eq("customer")
+          expect(customer[:attributes][:first_name]).to be_a String
+          expect(customer[:attributes][:last_name]).to be_a String
+          expect(customer[:attributes][:email]).to be_a String
+          expect(customer[:attributes][:address]).to be_a String
+        end
+      end
+    end
+
+    context "with invalid request" do
+      it "returns an error for invalid subscription_id" do
+        get api_v1_subscription_path(-1)
+
+        json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(response).to have_http_status(:not_found)
+        expect(json[:message]).to eq("Couldn't find Subscription with 'id'=-1")
+        expect(json[:status]).to eq(404)
+      end
+    end
+  end
 end
