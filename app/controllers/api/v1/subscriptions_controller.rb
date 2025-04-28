@@ -13,6 +13,10 @@ class Api::V1::SubscriptionsController < ApplicationController
     render json: SubscriptionSerializer.new(subs, {fields: {subscription: [:title, :price, :image_url]}}), status: :ok
   end
 
+  def show
+    render json: SubscriptionSerializer.new(Subscription.find(params[:id]), {include: [:teas]})
+  end
+
   private
 
   def sort_params
