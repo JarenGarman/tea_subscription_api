@@ -76,7 +76,7 @@ RSpec.describe "Subscriptions API", type: :request do
 
     context "with valid request" do
       it "returns all subscription with expected fields and relationships" do
-        get api_v1_subscriptions_path(sub.id)
+        get api_v1_subscription_path(sub.id)
 
         expect(response).to have_http_status(:ok)
         json = JSON.parse(response.body, symbolize_names: true)
@@ -86,6 +86,16 @@ RSpec.describe "Subscriptions API", type: :request do
         expect(json[:data][:attributes][:title]).to be_a String
         expect(json[:data][:attributes][:price]).to be_a Float
         expect(json[:data][:attributes][:image_url]).to be_a String
+
+        expect(json[:included].size).to eq(sub.teas.size)
+        json[:included].each do |tea|
+          expect(tea[:id]).to be_a String
+          expect(tea[:type]).to eq("tea")
+          expect(tea[:attributes][:title]).to be_a String
+          expect(tea[:attributes][:description]).to be_a String
+          expect(tea[:attributes][:brew_time]).to be_an Integer
+          expect(tea[:attributes][:image_url]).to be_a String
+        end
 
         customer_subs = json[:data][:attributes][:customer_subscriptions]
         expect(customer_subs.size).to eq(sub.customer_subscriptions.size)
@@ -101,14 +111,12 @@ RSpec.describe "Subscriptions API", type: :request do
           expect(customer[:attributes][:email]).to be_a String
           expect(customer[:attributes][:address]).to be_a String
         end
-
-        expect(json[:included].size).to eq(sub.teas.size)
       end
     end
 
     context "with invalid request" do
       it "returns an error for invalid subscription_id" do
-        get api_v1_subscriptions_path(-1)
+        get api_v1_subscription_path(-1)
 
         json = JSON.parse(response.body, symbolize_names: true)
 
