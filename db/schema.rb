@@ -47,7 +47,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_28_172421) do
     t.string "title"
     t.float "price"
     t.string "image_url"
-    t.string "string"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

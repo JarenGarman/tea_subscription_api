@@ -4,7 +4,6 @@ class CreateSubscriptions < ActiveRecord::Migration[7.1]
       t.string :title
       t.float :price
       t.string :image_url
-      t.string :string
 
       t.timestamps
     end
