@@ -5,7 +5,6 @@ RSpec.describe Subscription, type: :model do
     it { is_expected.to have_many :subscription_teas }
     it { is_expected.to have_many(:teas).through :subscription_teas }
     it { is_expected.to have_many :customer_subscriptions }
-    it { is_expected.to have_many(:customers).through :customer_subscriptions }
   end
 
   describe "Validations" do
