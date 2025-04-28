@@ -1,8 +1,7 @@
 FactoryBot.define do
   factory :subscription do
-    title { "MyString" }
-    price { 1.5 }
-    image_url { "MyString" }
-    string { "MyString" }
+    title { Faker::Lorem.word }
+    price { Faker::Commerce.price }
+    image_url { Faker::LoremFlickr.image }
   end
 end
