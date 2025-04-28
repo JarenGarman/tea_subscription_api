@@ -19,7 +19,7 @@ RSpec.describe "Subscriptions API", type: :request do
         end
       end
 
-      it "can sort by price" do
+      it "can sort by price desc" do
         get api_v1_subscriptions_path, params: {sort_by_price: "desc"}
 
         expect(response).to have_http_status(:ok)
@@ -35,6 +35,25 @@ RSpec.describe "Subscriptions API", type: :request do
         end
         json[:data].each_cons(2) do |sub1, sub2|
           expect(sub1[:attributes][:price]).to be >= sub2[:attributes][:price]
+        end
+      end
+
+      it "can sort by price asc" do
+        get api_v1_subscriptions_path, params: {sort_by_price: "asc"}
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body, symbolize_names: true)
+
+        expect(json[:data].count).to eq(10)
+        json[:data].each do |subscription|
+          expect(subscription[:id]).to be_a String
+          expect(subscription[:type]).to eq("subscription")
+          expect(subscription[:attributes][:title]).to be_a String
+          expect(subscription[:attributes][:price]).to be_a Float
+          expect(subscription[:attributes][:image_url]).to be_a String
+        end
+        json[:data].each_cons(2) do |sub1, sub2|
+          expect(sub1[:attributes][:price]).to be <= sub2[:attributes][:price]
         end
       end
     end
