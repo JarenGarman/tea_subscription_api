@@ -37,6 +37,12 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+    load Rails.root.join("db/seeds.rb").to_s
+  end
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
     Rails.root.join("spec/fixtures")
