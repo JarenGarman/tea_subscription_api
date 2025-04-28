@@ -87,6 +87,13 @@ RSpec.describe "Subscriptions API", type: :request do
         expect(json[:data][:attributes][:price]).to be_a Float
         expect(json[:data][:attributes][:image_url]).to be_a String
 
+        teas = json[:data][:relationships][:teas][:data]
+        expect(teas.size).to eq(sub.teas.size)
+        teas.each do |tea|
+          expect(tea[:id]).to be_a String
+          expect(tea[:type]).to eq("tea")
+        end
+
         expect(json[:included].size).to eq(sub.teas.size)
         json[:included].each do |tea|
           expect(tea[:id]).to be_a String
