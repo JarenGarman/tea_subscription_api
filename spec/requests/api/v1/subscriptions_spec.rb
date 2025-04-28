@@ -104,13 +104,13 @@ RSpec.describe "Subscriptions API", type: :request do
           expect(tea[:attributes][:image_url]).to be_a String
         end
 
-        customer_subs = json[:data][:attributes][:customer_subscriptions]
+        customer_subs = json[:data][:attributes][:customer_subscriptions][:data]
         expect(customer_subs.size).to eq(sub.customer_subscriptions.size)
         customer_subs.each do |customer_sub|
           expect(customer_sub[:id]).to be_a String
           expect(customer_sub[:type]).to eq("customer_subscription")
           expect(customer_sub[:attributes][:status]).to eq("active").or eq("inactive")
-          customer = customer_sub[:attributes][:customer]
+          customer = customer_sub[:attributes][:customer][:data]
           expect(customer[:id]).to be_a String
           expect(customer[:type]).to eq("customer")
           expect(customer[:attributes][:first_name]).to be_a String
