@@ -10,7 +10,7 @@ class Api::V1::SubscriptionsController < ApplicationController
     else
       subs = Subscription.all
     end
-    render json: SubscriptionSerializer.new(subs), status: :ok
+    render json: SubscriptionSerializer.new(subs, {fields: {subscription: [:title, :price, :image_url]}}), status: :ok
   end
 
   private
