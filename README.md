@@ -40,7 +40,7 @@ Welcome to the backend repo for the Tea Subscription website! This repo holds th
 
 ## API Endpoints
 
-To view the available endpoints for this API, please visit the [OpenAPI Documentation](https://jarengarman.github.io/tea_subscription_api_docs/). There you will find the endpoint definitions, required formatting for requests, example requests and responses (including JSON schemas), and the ability to try out requests on your local instance!
+To view the available endpoints for this API, please visit the [OpenAPI Documentation](https://jarengarman.github.io/tea_subscription_api_docs/). There you will find the endpoint definitions, required formatting for requests, and example requests and responses (including possible errors and messages).
 
 ## Contributors
 
